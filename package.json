@@ -1,0 +1,130 @@
+{
+  "name": "coc-psalm",
+  "version": "0.0.0-development",
+  "description": "",
+  "author": "yaegassy <yaegassy@users.noreply.github.com>",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "keywords": [
+    "coc.nvim"
+  ],
+  "engines": {
+    "coc": "^0.0.80"
+  },
+  "scripts": {
+    "lint": "eslint src --ext ts",
+    "clean": "rimraf lib",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "prepare": "npm-run-all clean build"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 120,
+    "semi": true
+  },
+  "activationEvents": [
+    "workspaceContains:psalm.xml",
+    "workspaceContains:psalm.xml.dist"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "coc-psalm configuration",
+      "properties": {
+        "psalm.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable coc-psalm extension"
+        },
+        "psalm.phpExecutablePath": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Optional, defaults to searching for \"php\". The path to a PHP 7.0+ executable to use to execute the Psalm server. The PHP 7.0+ installation should preferably include and enable the PHP module `pcntl`. (Modifying requires restart)"
+        },
+        "psalm.phpExecutableArgs": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "default": [
+            "-dxdebug.remote_autostart=0",
+            "-dxdebug.remote_enable=0",
+            "-dxdebug_profiler_enable=0"
+          ],
+          "description": "Optional (Advanced), default is '-dxdebug.remote_autostart=0 -dxdebug.remote_enable=0 -dxdebug_profiler_enable=0'.  Additional PHP executable CLI arguments to use."
+        },
+        "psalm.psalmScriptPath": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Optional (Advanced). If provided, this overrides the Psalm script to use, e.g. vendor/bin/psalm-language-server. (Modifying requires restart)"
+        },
+        "psalm.enableDebugLog": {
+          "type": [
+            "boolean"
+          ],
+          "default": false,
+          "description": "Enable this to print messages. (Modifying requires restart)"
+        },
+        "psalm.analyzedFileExtensions": {
+          "type": [
+            "array"
+          ],
+          "default": [
+            {
+              "scheme": "file",
+              "language": "php"
+            },
+            {
+              "scheme": "untitled",
+              "language": "php"
+            }
+          ],
+          "description": "A list of file extensions to request Psalm to analyze. By default, this only includes 'php' (Modifying requires restart)"
+        },
+        "psalm.unusedVariableDetection": {
+          "type": [
+            "boolean"
+          ],
+          "default": false,
+          "description": "Enable this to enable unused variable and parameter detection"
+        },
+        "psalm.configPaths": {
+          "type": "array",
+          "default": [
+            "psalm.xml",
+            "psalm.xml.dist"
+          ],
+          "description": "A list of files to checkup for psalm configuration (relative to the workspace directory)"
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/mz": "^0.0.31",
+    "@types/semver": "^6.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.8.2",
+    "@typescript-eslint/parser": "^4.8.2",
+    "coc.nvim": "^0.0.80",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.2.0",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "webpack": "^5.9.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "dependencies": {
+    "mz": "^2.7.0",
+    "semver": "^6.3.0"
+  }
+}
