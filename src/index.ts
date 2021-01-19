@@ -269,6 +269,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ],
     },
     progressOnInitialization: true,
+    disableCompletion: true,
+    disableSnippetCompletion: true,
+    diagnosticCollectionName: 'psalm',
   };
 
   // Create the language client and start the client.
