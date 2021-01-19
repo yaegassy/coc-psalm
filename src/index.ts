@@ -6,6 +6,8 @@ import {
   StreamInfo,
   DocumentSelector,
   workspace,
+  Diagnostic,
+  HandleDiagnosticsSignature,
 } from 'coc.nvim';
 
 import * as path from 'path';
@@ -272,6 +274,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
     disableCompletion: true,
     disableSnippetCompletion: true,
     diagnosticCollectionName: 'psalm',
+    middleware: {
+      handleDiagnostics: (uri: string, diagnostics: Diagnostic[], next: HandleDiagnosticsSignature) => {
+        diagnostics = diagnostics.filter((o) => (o.code = JSON.stringify(o.code, ['value']).replace('value', 'see')));
+        next(uri, diagnostics);
+      },
+    },
   };
 
   // Create the language client and start the client.
