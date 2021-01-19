@@ -77,6 +77,12 @@ function escapeRegExp(str: string) {
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const conf = workspace.getConfiguration('psalm');
+
+  const isEnable = conf.get<boolean>('enable', true);
+  if (!isEnable) {
+    return;
+  }
+
   const phpExecutablePath = conf.get<string>('phpExecutablePath') || 'php';
 
   let phpExecutableArgs = conf.get<string>('phpExecutableArgs') || [

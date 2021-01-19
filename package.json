@@ -32,7 +32,7 @@
       "type": "object",
       "title": "coc-psalm configuration",
       "properties": {
-        "psalm.enabled": {
+        "psalm.enable": {
           "type": "boolean",
           "default": true,
           "description": "Enable coc-psalm extension"
