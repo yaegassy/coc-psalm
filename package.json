@@ -1,12 +1,16 @@
 {
   "name": "coc-psalm",
-  "version": "0.0.0-development",
-  "description": "",
-  "author": "yaegassy <yaegassy@users.noreply.github.com>",
+  "version": "0.1.0",
+  "description": "Psalm extension for coc.nvim",
+  "author": "yaegassy <yosstools@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
   "keywords": [
-    "coc.nvim"
+    "coc.nvim",
+    "php",
+    "psalm",
+    "vim",
+    "neovim"
   ],
   "engines": {
     "coc": "^0.0.80"
