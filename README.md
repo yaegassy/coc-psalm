@@ -2,7 +2,9 @@
 
 > fork from a [psalm/psalm-vscode-plugin](https://github.com/psalm/psalm-vscode-plugin)
 
-[coc.nvim](https://github.com/neoclide/coc.nvim) extension for [Psalm](https://psalm.dev/) language server
+[coc.nvim](https://github.com/neoclide/coc.nvim) extension for [Psalm](https://psalm.dev/) language server (PHP static analysis tool)
+
+<img width="780" alt="coc-psalm-screenshot" src="https://user-images.githubusercontent.com/188642/105113456-53e03280-5b08-11eb-8fad-5a2bb0aa33a0.png">
 
 ## Install
 
