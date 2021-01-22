@@ -8,6 +8,7 @@ import {
   workspace,
   Diagnostic,
   HandleDiagnosticsSignature,
+  commands,
 } from 'coc.nvim';
 
 import * as path from 'path';
@@ -131,12 +132,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     psalmClientScriptPath = path.join(workspacePath, psalmClientScriptPath);
   }
 
-  const psalmConfigPath = filterPath(psalmConfigPaths, workspacePath);
-  if (psalmConfigPath === null) {
-    window.showErrorMessage('No psalm.xml config found in project root');
-    return;
-  }
-
   // Check if psalm is installed and supports the language server protocol.
   const isValidPsalmVersion: boolean = await checkPsalmHasLanguageServer(psalmServerScriptPath);
   if (!isValidPsalmVersion) {
@@ -187,6 +182,31 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   } else {
     phpExecutableArgs = [];
+  }
+
+  // **NOTE**
+  // In coc-psalm, activationEvents are intentionally set to "workspaceContains:psalm.xml" or "workspaceContains:psalm.xml.dist".
+  // In order for this to work, you need to change activationEvents to "onLanguage:php".
+  const psalmConfigPath = filterPath(psalmConfigPaths, workspacePath);
+  if (psalmConfigPath === null) {
+    window
+      .showWarningMessage('No psalm.xml config found in project root. Want to configure one?', 'Yes', 'No')
+      .then(async (result) => {
+        if (result == 'Yes') {
+          await execFile(phpExecutablePath, [psalmClientScriptPath, '--init'], { cwd: workspacePath });
+          window
+            .showInformationMessage(
+              'Psalm configuration has been initialized. To make the setting effective, run :CocRestart.',
+              'Restart coc.nvim'
+            )
+            .then((result) => {
+              if (result == 'Restart coc.nvim') {
+                commands.executeCommand('editor.action.restart');
+              }
+            });
+        }
+      });
+    return;
   }
 
   const psalmHasLanguageServerOption: boolean = await checkPsalmLanguageServerHasOption(
