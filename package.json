@@ -141,6 +141,7 @@
   },
   "dependencies": {
     "mz": "^2.7.0",
+    "semantic-release": "^17.2.3",
     "semver": "^6.3.0"
   }
 }
