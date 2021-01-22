@@ -15,6 +15,8 @@ import { spawn, execFile, ChildProcess } from 'mz/child_process';
 import * as semver from 'semver';
 import * as fs from 'fs';
 
+import { registerCommands } from './commands';
+
 function isFile(filePath: string): boolean {
   try {
     const stat = fs.statSync(filePath);
@@ -311,7 +313,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // Push the disposable to the context's subscriptions so that the
   // client can be deactivated on extension deactivation
   const disposable = lc.start();
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(...registerCommands(lc), disposable);
 
   await lc.onReady();
 }
