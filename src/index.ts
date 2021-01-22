@@ -91,8 +91,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     '-dxdebug_profiler_enable=0',
   ];
 
-  const defaultPsalmScriptPath = path.join('vendor', 'vimeo', 'psalm', 'psalm-language-server');
-  let psalmScriptPath = conf.get<string>('psalmScriptPath') || defaultPsalmScriptPath;
+  const defaultPsalmClientScriptPath = path.join('vendor', 'vimeo', 'psalm', 'psalm');
+  const defaultPsalmServerScriptPath = path.join('vendor', 'vimeo', 'psalm', 'psalm-language-server');
+  let psalmClientScriptPath = conf.get<string>('psalmClientScriptPath') || defaultPsalmClientScriptPath;
+  let psalmServerScriptPath = conf.get<string>('psalmScriptPath') || defaultPsalmServerScriptPath;
   const unusedVariableDetection = conf.get<boolean>('unusedVariableDetection') || false;
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
 
@@ -104,7 +106,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ];
   const psalmConfigPaths: string[] = conf.get<string[]>('configPaths') || ['psalm.xml', 'psalm.xml.dist'];
 
-  if (!fs.existsSync(psalmScriptPath)) {
+  // Check if the psalmServerScriptPath setting was provided.
+  if (!fs.existsSync(psalmServerScriptPath)) {
     window.showMessage(
       `The setting psalm.psalmScriptPath must be provided (e.g. vendor/bin/psalm-language-server)`,
       'error'
@@ -112,10 +115,20 @@ export async function activate(context: ExtensionContext): Promise<void> {
     return;
   }
 
+  // Check if the psalmClientScriptPath setting was provided.
+  if (!psalmClientScriptPath) {
+    window.showMessage(`The setting psalm.psalmClientScriptPath must be provided (e.g. vendor/bin/psalm)`, 'error');
+    return;
+  }
+
   const workspacePath = workspace.root;
 
-  if (!isFile(psalmScriptPath)) {
-    psalmScriptPath = path.join(workspacePath, psalmScriptPath);
+  if (!isFile(psalmServerScriptPath)) {
+    psalmServerScriptPath = path.join(workspacePath, psalmServerScriptPath);
+  }
+
+  if (!isFile(psalmClientScriptPath)) {
+    psalmClientScriptPath = path.join(workspacePath, psalmClientScriptPath);
   }
 
   const psalmConfigPath = filterPath(psalmConfigPaths, workspacePath);
@@ -125,8 +138,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   // Check if psalm is installed and supports the language server protocol.
-
-  const isValidPsalmVersion: boolean = await checkPsalmHasLanguageServer(psalmScriptPath);
+  const isValidPsalmVersion: boolean = await checkPsalmHasLanguageServer(psalmServerScriptPath);
   if (!isValidPsalmVersion) {
     return;
   }
@@ -180,7 +192,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const psalmHasLanguageServerOption: boolean = await checkPsalmLanguageServerHasOption(
     phpExecutablePath,
     phpExecutableArgs,
-    psalmScriptPath,
+    psalmServerScriptPath,
     [],
     '--language-server'
   );
@@ -188,7 +200,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const psalmHasExtendedDiagnosticCodes: boolean = await checkPsalmLanguageServerHasOption(
     phpExecutablePath,
     phpExecutableArgs,
-    psalmScriptPath,
+    psalmServerScriptPath,
     psalmScriptArgs,
     '--use-extended-diagnostic-codes'
   );
@@ -196,7 +208,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     ? await checkPsalmLanguageServerHasOption(
         phpExecutablePath,
         phpExecutableArgs,
-        psalmScriptPath,
+        psalmServerScriptPath,
         psalmScriptArgs,
         '--verbose'
       )
@@ -230,7 +242,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
         // The server is implemented in PHP
         // this goes before the cli argument separator
-        args.unshift('-f', psalmScriptPath);
+        args.unshift('-f', psalmServerScriptPath);
 
         if (phpExecutableArgs) {
           if (Array.isArray(phpExecutableArgs)) {
@@ -255,7 +267,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
           });
         }
         childProcess.on('exit', (code, signal) => {
-          console.log('Pslam Language Server exited: ' + code + ':' + signal);
+          console.log('Psalm Language Server exited: ' + code + ':' + signal);
         });
         return childProcess;
       };
