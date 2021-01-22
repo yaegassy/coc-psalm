@@ -290,7 +290,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // Create the language client and start the client.
   const lc = new LanguageClient(
-    'psalm',
+    'psalmLanguageServer',
     'Psalm Language Server',
     serverOptionsCallbackForDirectory(workspacePath),
     clientOptions
