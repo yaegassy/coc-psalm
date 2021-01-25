@@ -32,6 +32,10 @@ Requires `psalm.xml` or `psalm.xml.dist` configuration file in the "project root
 - `psalm.unusedVariableDetection`: Enable this to enable unused variable and parameter detection, default: `false`
 - `psalm.configPaths`: A list of files to checkup for psalm configuration (relative to the workspace directory), default: `["psalm.xml", "psalm.xml.dist"]`
 
+## Commands
+
+- `psalm.restartPsalmServer`: Restart Psalm Language server
+
 ## License
 
 MIT
