@@ -1,6 +1,6 @@
 {
   "name": "coc-psalm",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Psalm extension for coc.nvim",
   "author": "yaegassy <yosstools@gmail.com>",
   "license": "MIT",
