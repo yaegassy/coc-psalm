@@ -100,6 +100,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   let psalmServerScriptPath = conf.get<string>('psalmScriptPath') || defaultPsalmServerScriptPath;
   const unusedVariableDetection = conf.get<boolean>('unusedVariableDetection') || false;
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
+  const disableCompletion = conf.get<boolean>('disableCompletion') || false;
 
   const analyzedFileExtensions: undefined | string[] | DocumentSelector = conf.get<string[] | DocumentSelector>(
     'analyzedFileExtensions'
@@ -311,9 +312,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ],
     },
     progressOnInitialization: true,
-    disableCompletion: true,
-    disableSnippetCompletion: true,
     diagnosticCollectionName: 'psalm',
+    disableCompletion: disableCompletion,
     middleware: {
       handleDiagnostics: (uri: string, diagnostics: Diagnostic[], next: HandleDiagnosticsSignature) => {
         diagnostics = diagnostics.filter((o) => (o.code = JSON.stringify(o.code, ['value']).replace('value', 'see')));

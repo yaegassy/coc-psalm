@@ -45,6 +45,11 @@
           "default": true,
           "description": "Enable coc-psalm extension"
         },
+        "psalm.disableCompletion": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable completion only."
+        },
         "psalm.phpExecutablePath": {
           "type": [
             "string",
