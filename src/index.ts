@@ -316,7 +316,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     disableCompletion: disableCompletion,
     middleware: {
       handleDiagnostics: (uri: string, diagnostics: Diagnostic[], next: HandleDiagnosticsSignature) => {
-        diagnostics = diagnostics.filter((o) => (o.code = JSON.stringify(o.code, ['value']).replace('value', 'see')));
+        diagnostics = diagnostics.filter((o) => (o.code = JSON.stringify(o.code, ['value']).replace('value', 'issue')));
         next(uri, diagnostics);
       },
     },
