@@ -9,6 +9,7 @@ import {
   Diagnostic,
   HandleDiagnosticsSignature,
   commands,
+  languages,
 } from 'coc.nvim';
 
 import * as path from 'path';
@@ -17,6 +18,7 @@ import * as semver from 'semver';
 import * as fs from 'fs';
 
 import { registerCommands } from './commands';
+import { PsalmCodeActionProvider } from './actions';
 
 function isFile(filePath: string): boolean {
   try {
@@ -334,6 +336,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // client can be deactivated on extension deactivation
   const disposable = lc.start();
   context.subscriptions.push(...registerCommands(lc), disposable);
+
+  /** **CUSTOM** Add code action */
+  const codeActionProvider = new PsalmCodeActionProvider();
+  context.subscriptions.push(
+    languages.registerCodeActionProvider(analyzedFileExtensions, codeActionProvider, 'psalmLanguageServer')
+  );
 
   await lc.onReady();
 }

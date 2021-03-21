@@ -39,6 +39,10 @@ Requires `psalm.xml` or `psalm.xml.dist` configuration file in the "project root
 
 - `psalm.restartPsalmServer`: Restart Psalm Language server
 
+## Code Actions
+
+- `Show issue for https://psalm.dev/xxx (Open Url)`: Open the issue url in your browser
+
 ## License
 
 MIT
