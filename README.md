@@ -4,6 +4,8 @@
 
 [coc.nvim](https://github.com/neoclide/coc.nvim) extension for [Psalm](https://psalm.dev/) language server (PHP static analysis tool)
 
+"Psalm" started as a static analysis tool, but now it also has the features of a [Language Server](https://psalm.dev/docs/running_psalm/language_server/).
+
 <img width="780" alt="coc-psalm-screenshot" src="https://user-images.githubusercontent.com/188642/105113456-53e03280-5b08-11eb-8fad-5a2bb0aa33a0.png">
 
 ## Install
