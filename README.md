@@ -43,7 +43,7 @@ Requires `psalm.xml` or `psalm.xml.dist` configuration file in the "project root
 
 - `Show issue for https://psalm.dev/xxx (Open Url)`: Open the issue url in your browser
 
-### "psalm.xml" or "psalm.xml.dist" completion and linting and more...
+## "psalm.xml" or "psalm.xml.dist" completion and linting and more...
 
 To use it, you need to install [coc-xml](https://github.com/fannheyward/coc-xml).
 
