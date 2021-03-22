@@ -41,8 +41,8 @@ Requires `psalm.xml` or `psalm.xml.dist` configuration file in the "project root
 
 ## Code Actions
 
-- `Add @psalm suppress for this line`: Add `/** @psalm-suppress all */` for this line
-- `Add @psalm suppress for the entire file`: Add `/** @psalm-suppress all */` for the entire file
+- `Add @psalm suppress for this line`
+- `Add @psalm suppress for the entire file`
 - `Show issue for https://psalm.dev/xxx`: Open the issue url in your browser
 
 ## "psalm.xml" or "psalm.xml.dist" completion and linting and more...
