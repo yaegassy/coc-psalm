@@ -66,34 +66,35 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
     }
 
     /** Add @psalm suppress for the entire file */
-    if (whole && context.diagnostics.length > 0) {
-      const suppressFileNewText = `/** @psalm-suppress all */\n`;
-      let suppressFileLine = 0;
-      let isSuppressFilleLine = false;
-
-      for (let [i, v] of (await doc.buffer.lines).entries()) {
-        v = v.trim();
-        if (v.endsWith('declare(strict_types=1);')) {
-          suppressFileLine = i + 1;
-          isSuppressFilleLine = true;
-        } else if (v.endsWith('<?php')) {
-          suppressFileLine = i + 1;
-          isSuppressFilleLine = true;
-        }
-      }
-
-      if (isSuppressFilleLine) {
-        const edit = TextEdit.insert(Position.create(suppressFileLine, 0), suppressFileNewText);
-        codeActions.push({
-          title: 'Add @psalm suppress for the entire file',
-          edit: {
-            changes: {
-              [doc.uri]: [edit],
-            },
-          },
-        });
-      }
-    }
+    /** MEMO: Since file-level suppression is not supported in the current psalm, comment out this feature */
+    // if (whole && context.diagnostics.length > 0) {
+    //   const suppressFileNewText = `/** @psalm-suppress all */\n`;
+    //   let suppressFileLine = 0;
+    //   let isSuppressFilleLine = false;
+    //
+    //   for (let [i, v] of (await doc.buffer.lines).entries()) {
+    //     v = v.trim();
+    //     if (v.endsWith('declare(strict_types=1);')) {
+    //       suppressFileLine = i + 1;
+    //       isSuppressFilleLine = true;
+    //     } else if (v.endsWith('<?php')) {
+    //       suppressFileLine = i + 1;
+    //       isSuppressFilleLine = true;
+    //     }
+    //   }
+    //
+    //   if (isSuppressFilleLine) {
+    //     const edit = TextEdit.insert(Position.create(suppressFileLine, 0), suppressFileNewText);
+    //     codeActions.push({
+    //       title: 'Add @psalm suppress for the entire file',
+    //       edit: {
+    //         changes: {
+    //           [doc.uri]: [edit],
+    //         },
+    //       },
+    //     });
+    //   }
+    // }
 
     /** Show issue for ${url} */
     for (const diagnostic of context.diagnostics) {
