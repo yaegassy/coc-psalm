@@ -48,15 +48,21 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
         suppressLineNewText = '/** @psalm-suppress all */\n' + addIndentSpace;
       }
 
-      const edit = TextEdit.insert(Position.create(range.start.line, suppressLineLength), suppressLineNewText);
-      codeActions.push({
-        title: 'Add @psalm suppress for this line',
-        edit: {
-          changes: {
-            [doc.uri]: [edit],
+      let thisLineContent = doc.getline(range.start.line);
+      thisLineContent = thisLineContent.trim();
+
+      /** MEMO: For "DocComment" line, do not add suppress action */
+      if (!thisLineContent.startsWith('/**') && !thisLineContent.startsWith('*')) {
+        const edit = TextEdit.insert(Position.create(range.start.line, suppressLineLength), suppressLineNewText);
+        codeActions.push({
+          title: 'Add @psalm suppress for this line',
+          edit: {
+            changes: {
+              [doc.uri]: [edit],
+            },
           },
-        },
-      });
+        });
+      }
     }
 
     /** Add @psalm suppress for the entire file */
