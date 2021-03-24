@@ -19,7 +19,7 @@ import path from 'path';
 
 export class PsalmCodeActionProvider implements CodeActionProvider {
   private readonly source = 'psalmLanguageServer';
-  private outputChannel = window.createOutputChannel('psalmLanguageServer-action');
+  //private outputChannel = window.createOutputChannel('psalmLanguageServer-action');
   private diagnosticCollection = languages.createDiagnosticCollection(this.source);
 
   public async provideCodeActions(document: TextDocument, range: Range, context: CodeActionContext) {
