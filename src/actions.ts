@@ -3,19 +3,12 @@ import {
   CodeAction,
   CodeActionContext,
   CodeActionProvider,
-  Diagnostic,
-  DiagnosticSeverity,
   languages,
   Position,
   Range,
   TextEdit,
-  window,
   workspace,
-  WorkspaceEdit,
-  commands,
 } from 'coc.nvim';
-
-import path from 'path';
 
 export class PsalmCodeActionProvider implements CodeActionProvider {
   private readonly source = 'psalmLanguageServer';
@@ -32,6 +25,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
       range.end.line === wholeRange.end.line &&
       range.end.character === wholeRange.end.character
     ) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       whole = true;
     }
     const codeActions: CodeAction[] = [];
@@ -44,7 +38,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
 
       let suppressLineNewText = '/** @psalm-suppress all */\n';
       if (suppressLineLength > 0) {
-        let addIndentSpace = ' '.repeat(suppressLineLength);
+        const addIndentSpace = ' '.repeat(suppressLineLength);
         suppressLineNewText = '/** @psalm-suppress all */\n' + addIndentSpace;
       }
 
@@ -104,11 +98,11 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
 
         /** type guard */
         if (typeof diagnostic.code === 'string') {
-          let url = JSON.parse(diagnostic.code).issue;
+          const url = JSON.parse(diagnostic.code).issue;
           //this.outputChannel.appendLine(`URL: ${url}\n`);
 
-          let title = `Show issue for ${url}`;
-          let command = {
+          const title = `Show issue for ${url}`;
+          const command = {
             title: '',
             command: 'vscode.open',
             arguments: [url],
