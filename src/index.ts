@@ -1,15 +1,19 @@
 import {
+  CancellationToken,
+  commands,
+  Diagnostic,
+  DocumentSelector,
   ExtensionContext,
-  window,
+  HandleDiagnosticsSignature,
   LanguageClient,
   LanguageClientOptions,
-  StreamInfo,
-  DocumentSelector,
-  workspace,
-  Diagnostic,
-  HandleDiagnosticsSignature,
-  commands,
   languages,
+  Position,
+  ProvideDefinitionSignature,
+  StreamInfo,
+  TextDocument,
+  window,
+  workspace,
 } from 'coc.nvim';
 
 import * as path from 'path';
@@ -103,6 +107,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const unusedVariableDetection = conf.get<boolean>('unusedVariableDetection') || false;
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
   const disableCompletion = conf.get<boolean>('disableCompletion') || false;
+  const disableDefinition = conf.get<boolean>('disableDefinition') || false;
 
   const analyzedFileExtensions: undefined | string[] | DocumentSelector = conf.get<string[] | DocumentSelector>(
     'analyzedFileExtensions'
@@ -320,6 +325,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
       handleDiagnostics: (uri: string, diagnostics: Diagnostic[], next: HandleDiagnosticsSignature) => {
         diagnostics = diagnostics.filter((o) => (o.code = JSON.stringify(o.code, ['value']).replace('value', 'issue')));
         next(uri, diagnostics);
+      },
+      provideDefinition: async (
+        document: TextDocument,
+        position: Position,
+        token: CancellationToken,
+        next: ProvideDefinitionSignature
+      ) => {
+        if (disableDefinition) return;
+
+        const def = await next(document, position, token);
+        return def;
       },
     },
   };

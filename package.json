@@ -50,6 +50,11 @@
           "default": false,
           "description": "Disable completion only."
         },
+        "psalm.disableDefinition": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable definition only."
+        },
         "psalm.phpExecutablePath": {
           "type": [
             "string",
