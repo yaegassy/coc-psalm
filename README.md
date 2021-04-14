@@ -32,6 +32,7 @@ composer require --dev vimeo/psalm
 
 - `psalm.enable`: Enable coc-psalm extension, default: `true`
 - `psalm.disableCompletion`: Disable completion only, default: `false`
+- `psalm.disableDefinition`: Disable definition only, default: `false`
 - `psalm.phpExecutablePath`: Optional, defaults to searching for "php". The path to a PHP 7.0+ executable to use to execute the Psalm server. The PHP 7.0+ installation should preferably include and enable the PHP module `pcntl`. (Modifying requires restart), default: `null`
 - `psalm.phpExecutableArgs`: Optional (Advanced), default is '-dxdebug.remote_autostart=0 -dxdebug.remote_enable=0 -dxdebug_profiler_enable=0'.  Additional PHP executable CLI arguments to use, default: `["-dxdebug.remote_autostart=0", "-dxdebug.remote_enable=0", "-dxdebug_profiler_enable=0"]`
 - `psalm.psalmScriptPath`: Optional (Advanced). If provided, this overrides the Psalm script to use, e.g. vendor/bin/psalm-language-server. (Modifying requires restart), default: `null`
