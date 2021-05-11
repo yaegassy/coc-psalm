@@ -1,7 +1,5 @@
 # coc-psalm
 
-> fork from a [psalm/psalm-vscode-plugin](https://github.com/psalm/psalm-vscode-plugin) | [Psalm](https://marketplace.visualstudio.com/items?itemName=getpsalm.psalm-vscode-plugin)
-
 [coc.nvim](https://github.com/neoclide/coc.nvim) extension for [Psalm](https://psalm.dev/) language server.
 
 "Psalm" started as a static analysis tool, but now it also has the features of a [Language Server](https://psalm.dev/docs/running_psalm/language_server/).
@@ -54,6 +52,11 @@ composer require --dev vimeo/psalm
 ## "psalm.xml" or "psalm.xml.dist" completion and linting and more...
 
 To use it, you need to install [coc-xml](https://github.com/fannheyward/coc-xml).
+
+## Thanks
+
+- [vimeo/psalm](https://github.com/vimeo/psalm)
+- [psalm/psalm-vscode-plugin](https://github.com/psalm/psalm-vscode-plugin)
 
 ## License
 
