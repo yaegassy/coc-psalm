@@ -32,6 +32,13 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
 
     /** Add @psalm suppress for this line */
     if (range.start.line === range.end.line && range.start.character === 0 && context.diagnostics.length > 0) {
+      let existsPsalmDiagnostics = false;
+      context.diagnostics.forEach((d) => {
+        if (d.source === 'Psalm') {
+          existsPsalmDiagnostics = true;
+        }
+      });
+
       const thisLineFullLength = doc.getline(range.start.line).length;
       const thisLineTrimLength = doc.getline(range.start.line).trim().length;
       const suppressLineLength = thisLineFullLength - thisLineTrimLength;
@@ -46,7 +53,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
       thisLineContent = thisLineContent.trim();
 
       /** MEMO: For "DocComment" line, do not add suppress action */
-      if (!thisLineContent.startsWith('/**') && !thisLineContent.startsWith('*')) {
+      if (!thisLineContent.startsWith('/**') && !thisLineContent.startsWith('*') && existsPsalmDiagnostics) {
         const edit = TextEdit.insert(Position.create(range.start.line, suppressLineLength), suppressLineNewText);
         codeActions.push({
           title: 'Add @psalm suppress for this line',
@@ -96,8 +103,15 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
       if (diagnostic.code) {
         //this.outputChannel.appendLine(`DEBUG: ${JSON.parse(JSON.stringify(diagnostic.code))}\n`);
 
+        let existsPsalmDiagnostics = false;
+        context.diagnostics.forEach((d) => {
+          if (d.source === 'Psalm') {
+            existsPsalmDiagnostics = true;
+          }
+        });
+
         /** type guard */
-        if (typeof diagnostic.code === 'string') {
+        if (typeof diagnostic.code === 'string' && existsPsalmDiagnostics) {
           const url = JSON.parse(diagnostic.code).issue;
           //this.outputChannel.appendLine(`URL: ${url}\n`);
 
