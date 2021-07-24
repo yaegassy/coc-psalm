@@ -12,7 +12,7 @@ import {
 
 export class PsalmCodeActionProvider implements CodeActionProvider {
   private readonly source = 'psalmLanguageServer';
-  //private outputChannel = window.createOutputChannel('psalmLanguageServer-action');
+  // private outputChannel = window.createOutputChannel('psalmLanguageServer-action');
   private diagnosticCollection = languages.createDiagnosticCollection(this.source);
 
   public async provideCodeActions(document: TextDocument, range: Range, context: CodeActionContext) {
@@ -31,7 +31,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
     const codeActions: CodeAction[] = [];
 
     /** Add @psalm suppress for this line */
-    if (range.start.line === range.end.line && range.start.character === 0 && context.diagnostics.length > 0) {
+    if (this.lineRange(range) && context.diagnostics.length > 0) {
       let existsPsalmDiagnostics = false;
       context.diagnostics.forEach((d) => {
         if (d.source === 'Psalm') {
@@ -99,10 +99,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
 
     /** Show issue for ${url} */
     for (const diagnostic of context.diagnostics) {
-      //this.outputChannel.appendLine(`DEBUG: ${JSON.stringify(diagnostic)}\n`);
       if (diagnostic.code) {
-        //this.outputChannel.appendLine(`DEBUG: ${JSON.parse(JSON.stringify(diagnostic.code))}\n`);
-
         let existsPsalmDiagnostics = false;
         context.diagnostics.forEach((d) => {
           if (d.source === 'Psalm') {
@@ -113,7 +110,6 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
         /** type guard */
         if (typeof diagnostic.code === 'string' && existsPsalmDiagnostics) {
           const url = JSON.parse(diagnostic.code).issue;
-          //this.outputChannel.appendLine(`URL: ${url}\n`);
 
           const title = `Show issue for ${url}`;
           const command = {
@@ -133,5 +129,12 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
     }
 
     return codeActions;
+  }
+
+  private lineRange(r: Range): boolean {
+    return (
+      (r.start.line + 1 === r.end.line && r.start.character === 0 && r.end.character === 0) ||
+      (r.start.line === r.end.line && r.start.character === 0)
+    );
   }
 }
