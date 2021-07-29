@@ -46,6 +46,18 @@ composer require --dev vimeo/psalm
 
 ## Code Actions
 
+**Example key mapping (Code Action related)**:
+
+```vim
+nmap <silent> ga <Plug>(coc-codeaction-line)
+```
+
+**Usage**:
+
+In the line with diagnostic message, enter the mapped key (e.g. `ga`) and you will see a list of code actions that can be performed.
+
+**Actions**:
+
 - `Add @psalm suppress for this line`
 - `Show issue for https://psalm.dev/xxx`: Open the issue url in your browser
 
