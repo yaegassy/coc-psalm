@@ -136,6 +136,11 @@
         "command": "psalm.restartPsalmServer",
         "title": "Restart Psalm Language server",
         "category": "Psalm"
+      },
+      {
+        "command": "psalm.analyzeWorkSpace",
+        "title": "Analyze Workspace",
+        "category": "Psalm"
       }
     ]
   },

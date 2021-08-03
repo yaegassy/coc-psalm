@@ -43,6 +43,7 @@ composer require --dev vimeo/psalm
 ## Commands
 
 - `psalm.restartPsalmServer`: Restart Psalm Language server
+- `psalm.analyzeWorkSpace`: Analyze Workspace
 
 ## Code Actions
 
