@@ -105,6 +105,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   let psalmClientScriptPath = conf.get<string>('psalmClientScriptPath') || defaultPsalmClientScriptPath;
   let psalmServerScriptPath = conf.get<string>('psalmScriptPath') || defaultPsalmServerScriptPath;
   const unusedVariableDetection = conf.get<boolean>('unusedVariableDetection') || false;
+  const enableUseIniDefaults = conf.get<boolean>('enableUseIniDefaults') || false;
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
   const disableCompletion = conf.get<boolean>('disableCompletion') || false;
   const disableDefinition = conf.get<boolean>('disableDefinition') || false;
@@ -259,6 +260,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
         if (psalmHasExtendedDiagnosticCodes) {
           // this will add the help link to the diagnostic issue
           args.unshift('--use-extended-diagnostic-codes');
+        }
+
+        if (enableUseIniDefaults) {
+          args.unshift('--use-ini-defaults');
         }
 
         args.unshift('-r', workspacePath);
