@@ -40,6 +40,7 @@ composer require --dev vimeo/psalm
 - `psalm.analyzedFileExtensions`: A list of file extensions to request Psalm to analyze. By default, this only includes 'php' (Modifying requires restart), default: `[{ "scheme": "file", "language": "php" }, { "scheme": "untitled", "language": "php" }]`
 - `psalm.unusedVariableDetection`: Enable this to enable unused variable and parameter detection, default: `false`
 - `psalm.configPaths`: A list of files to checkup for psalm configuration (relative to the workspace directory), default: `["psalm.xml", "psalm.xml.dist"]`
+- `psalm.trace.server`: Traces the communication between coc.nvim and the Psalm language server, valid options `["off", "messages", "verbose"]`, default: `off`
 
 ## Commands
 

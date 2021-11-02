@@ -133,6 +133,17 @@
             "psalm.xml.dist"
           ],
           "description": "A list of files to checkup for psalm configuration (relative to the workspace directory)"
+        },
+        "psalm.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between coc.nvim and the Psalm language server",
+          "scope": "window"
         }
       }
     },
