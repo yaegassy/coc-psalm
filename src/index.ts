@@ -347,7 +347,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // Create the language client and start the client.
   const lc = new LanguageClient(
-    'psalmLanguageServer',
+    'psalm',
     'Psalm Language Server',
     serverOptionsCallbackForDirectory(workspacePath),
     clientOptions
@@ -360,9 +360,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   /** **CUSTOM** Add code action */
   const codeActionProvider = new PsalmCodeActionProvider();
-  context.subscriptions.push(
-    languages.registerCodeActionProvider(analyzedFileExtensions, codeActionProvider, 'psalmLanguageServer')
-  );
+  context.subscriptions.push(languages.registerCodeActionProvider(analyzedFileExtensions, codeActionProvider, 'psalm'));
 
   await lc.onReady();
 }

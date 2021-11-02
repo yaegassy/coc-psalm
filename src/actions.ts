@@ -11,7 +11,7 @@ import {
 } from 'coc.nvim';
 
 export class PsalmCodeActionProvider implements CodeActionProvider {
-  private readonly source = 'psalmLanguageServer';
+  private readonly source = 'psalm';
   // private outputChannel = window.createOutputChannel('psalmLanguageServer-action');
   private diagnosticCollection = languages.createDiagnosticCollection(this.source);
 
