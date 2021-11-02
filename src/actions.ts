@@ -12,7 +12,6 @@ import {
 
 export class PsalmCodeActionProvider implements CodeActionProvider {
   private readonly source = 'psalm';
-  // private outputChannel = window.createOutputChannel('psalmLanguageServer-action');
   private diagnosticCollection = languages.createDiagnosticCollection(this.source);
 
   public async provideCodeActions(document: TextDocument, range: Range, context: CodeActionContext) {
