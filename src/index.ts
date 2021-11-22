@@ -109,6 +109,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
   const disableCompletion = conf.get<boolean>('disableCompletion') || false;
   const disableDefinition = conf.get<boolean>('disableDefinition') || false;
+  const psalmScriptExtraArgs = conf.get<string[]>('psalmScriptExtraArgs', []) || [];
 
   const analyzedFileExtensions: undefined | string[] | DocumentSelector = conf.get<string[] | DocumentSelector>(
     'analyzedFileExtensions'
@@ -228,6 +229,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
     '--language-server'
   );
   const psalmScriptArgs = psalmHasLanguageServerOption ? ['--language-server'] : [];
+  if (psalmScriptExtraArgs) {
+    if (Array.isArray(psalmScriptExtraArgs)) {
+      psalmScriptArgs.unshift(...psalmScriptExtraArgs);
+    }
+  }
   const psalmHasExtendedDiagnosticCodes: boolean = await checkPsalmLanguageServerHasOption(
     phpExecutablePath,
     phpExecutableArgs,
