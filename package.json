@@ -180,7 +180,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.3.4"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
     "mz": "^2.7.0",
