@@ -155,14 +155,16 @@ export async function activate(context: ExtensionContext): Promise<void> {
   try {
     [stdout] = await execFile(phpExecutablePath, ['--version']);
   } catch (err) {
-    if (err.code === 'ENOENT') {
-      window.showMessage(
-        `PHP executable not found. Install PHP 7 and add it to your PATH or set the php.executablePath setting`,
-        'error'
-      );
-    } else {
-      window.showErrorMessage('Error spawning PHP: ' + err.message);
-      console.error(err);
+    if (err instanceof Error) {
+      if (err['code'] === 'ENOENT') {
+        window.showMessage(
+          `PHP executable not found. Install PHP 7 and add it to your PATH or set the php.executablePath setting`,
+          'error'
+        );
+      } else {
+        window.showErrorMessage('Error spawning PHP: ' + err.message);
+        console.error(err);
+      }
     }
     return;
   }
