@@ -8,10 +8,10 @@ import {
   LanguageClient,
   LanguageClientOptions,
   languages,
+  LinesTextDocument,
   Position,
   ProvideDefinitionSignature,
   StreamInfo,
-  TextDocument,
   window,
   workspace,
 } from 'coc.nvim';
@@ -107,8 +107,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const unusedVariableDetection = conf.get<boolean>('unusedVariableDetection') || false;
   const enableUseIniDefaults = conf.get<boolean>('enableUseIniDefaults') || false;
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
-  const disableCompletion = conf.get<boolean>('disableCompletion') || false;
-  const disableDefinition = conf.get<boolean>('disableDefinition') || false;
   const psalmScriptExtraArgs = conf.get<string[]>('psalmScriptExtraArgs', []) || [];
 
   const analyzedFileExtensions: undefined | string[] | DocumentSelector = conf.get<string[] | DocumentSelector>(
@@ -333,19 +331,19 @@ export async function activate(context: ExtensionContext): Promise<void> {
     },
     progressOnInitialization: true,
     diagnosticCollectionName: 'psalm',
-    disableCompletion: disableCompletion,
+    disabledFeatures: getLanguageClientDisabledFeatures(),
     middleware: {
       handleDiagnostics: (uri: string, diagnostics: Diagnostic[], next: HandleDiagnosticsSignature) => {
         diagnostics = diagnostics.filter((o) => (o.code = JSON.stringify(o.code, ['value']).replace('value', 'issue')));
         next(uri, diagnostics);
       },
       provideDefinition: async (
-        document: TextDocument,
+        document: LinesTextDocument,
         position: Position,
         token: CancellationToken,
         next: ProvideDefinitionSignature
       ) => {
-        if (disableDefinition) return;
+        if (getConfigDisableDefinition()) return;
 
         const def = await next(document, position, token);
         return def;
@@ -371,4 +369,18 @@ export async function activate(context: ExtensionContext): Promise<void> {
   context.subscriptions.push(languages.registerCodeActionProvider(analyzedFileExtensions, codeActionProvider, 'psalm'));
 
   await lc.onReady();
+}
+
+function getLanguageClientDisabledFeatures() {
+  const r: string[] = [];
+  if (getConfigDisableCompletion()) r.push('completion');
+  return r;
+}
+
+function getConfigDisableCompletion() {
+  return workspace.getConfiguration('psalm').get<boolean>('disableCompletion', false);
+}
+
+function getConfigDisableDefinition() {
+  return workspace.getConfiguration('psalm').get<boolean>('disableDefinition', false);
 }
