@@ -329,7 +329,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         workspace.createFileSystemWatcher('**/*.php'),
       ],
     },
-    progressOnInitialization: true,
+    progressOnInitialization: !getConfigDisableProgressOnInitialization() ? true : false,
     diagnosticCollectionName: 'psalm',
     disabledFeatures: getLanguageClientDisabledFeatures(),
     middleware: {
@@ -383,4 +383,8 @@ function getConfigDisableCompletion() {
 
 function getConfigDisableDefinition() {
   return workspace.getConfiguration('psalm').get<boolean>('disableDefinition', false);
+}
+
+function getConfigDisableProgressOnInitialization() {
+  return workspace.getConfiguration('psalm').get<boolean>('disableProgressOnInitialization', false);
 }

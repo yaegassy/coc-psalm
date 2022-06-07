@@ -55,6 +55,11 @@
           "default": false,
           "description": "Disable definition only."
         },
+        "psalm.disableProgressOnInitialization": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable ProgressOnInitialization only."
+        },
         "psalm.phpExecutablePath": {
           "type": [
             "string",
