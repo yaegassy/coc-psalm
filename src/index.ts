@@ -44,9 +44,8 @@ function filterPath(paths: string[], workspacePath: string): string | null {
 async function checkPsalmHasLanguageServer(psalmScriptPath: string): Promise<boolean> {
   const exists: boolean = isFile(psalmScriptPath);
   if (!exists) {
-    window.showMessage(
-      'The setting psalm.psalmScriptPath refers to a path that does not exist. path: ' + psalmScriptPath,
-      'error'
+    window.showErrorMessage(
+      'The setting psalm.psalmScriptPath refers to a path that does not exist. path: ' + psalmScriptPath
     );
     return false;
   }
@@ -141,9 +140,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   } catch (err) {
     if (err instanceof Error) {
       if (err['code'] === 'ENOENT') {
-        window.showMessage(
-          `PHP executable not found. Install PHP 7 and add it to your PATH or set the php.executablePath setting`,
-          'error'
+        window.showErrorMessage(
+          `PHP executable not found. Install PHP 7 and add it to your PATH or set the php.executablePath setting`
         );
       } else {
         window.showErrorMessage('Error spawning PHP: ' + err.message);
