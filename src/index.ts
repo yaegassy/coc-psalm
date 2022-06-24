@@ -1,6 +1,5 @@
 import {
   CancellationToken,
-  commands,
   Diagnostic,
   DocumentSelector,
   ExtensionContext,
@@ -98,15 +97,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     '-dxdebug_profiler_enable=0',
   ];
 
-  // TODO: (plan) remove psalmClientScriptPath related
-  let psalmClientScriptPath: string;
-  const customClientScriptPath = conf.get<string>('psalmClientScriptPath');
-  if (customClientScriptPath) {
-    psalmClientScriptPath = customClientScriptPath;
-  } else {
-    psalmClientScriptPath = path.join(workspace.root, 'vendor', 'vimeo', 'psalm', 'psalm');
-  }
-
   // server path
   let psalmServerScriptPath: string;
   const customServerScriptPath = conf.get<string>('psalmScriptPath');
@@ -192,30 +182,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
     phpExecutableArgs = [];
   }
 
-  // **NOTE**
-  // In coc-psalm, activationEvents are intentionally set to "workspaceContains:psalm.xml" or "workspaceContains:psalm.xml.dist".
-  // In order for this to work, you need to change activationEvents to "onLanguage:php".
   const psalmConfigPath = filterPath(psalmConfigPaths, workspace.root);
-  if (psalmConfigPath === null) {
-    window
-      .showWarningMessage('No psalm.xml config found in project root. Want to configure one?', 'Yes', 'No')
-      .then(async (result) => {
-        if (result == 'Yes') {
-          await execFile(phpExecutablePath, [psalmClientScriptPath, '--init'], { cwd: workspace.root });
-          window
-            .showInformationMessage(
-              'Psalm configuration has been initialized. To make the setting effective, run :CocRestart.',
-              'Restart coc.nvim'
-            )
-            .then((result) => {
-              if (result == 'Restart coc.nvim') {
-                commands.executeCommand('editor.action.restart');
-              }
-            });
-        }
-      });
-    return;
-  }
+  if (psalmConfigPath === null) return;
 
   const psalmHasLanguageServerOption: boolean = await checkPsalmLanguageServerHasOption(
     phpExecutablePath,
