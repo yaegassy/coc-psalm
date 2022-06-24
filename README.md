@@ -34,9 +34,9 @@ composer require --dev vimeo/psalm
 - `psalm.disableProgressOnInitialization`: Disable ProgressOnInitialization only, default: `false`
 - `psalm.phpExecutablePath`: Optional, defaults to searching for "php". The path to a PHP 7.0+ executable to use to execute the Psalm server. The PHP 7.0+ installation should preferably include and enable the PHP module `pcntl`. (Modifying requires restart), default: `null`
 - `psalm.phpExecutableArgs`: Optional (Advanced), default is '-dxdebug.remote_autostart=0 -dxdebug.remote_enable=0 -dxdebug_profiler_enable=0'.  Additional PHP executable CLI arguments to use, default: `["-dxdebug.remote_autostart=0", "-dxdebug.remote_enable=0", "-dxdebug_profiler_enable=0"]`
-- `psalm.psalmScriptPath`: Optional (Advanced). If provided, this overrides the Psalm script to use, e.g. vendor/bin/psalm-language-server. (Modifying requires restart), default: `null`
+- `psalm.psalmScriptPath`: Optional (Advanced). If provided, this overrides the Psalm server script to use, e.g. `vendor/bin/psalm-language-server`, `$HOME/path/to/psalm-language-server`, `~/path/to/psalm-language-server` (Modifying requires restart), default: `null`
 - `psalm.psalmScriptExtraArgs`: Optional (Advanced). Additional arguments to the Psalm language server. (Modifying requires restart), default: `[]`
-- `psalm.psalmClientScriptPath`: Optional (Advanced). If provided, this overrides the Psalm script to use, e.g. vendor/bin/psalm. (Modifying requires restart), default: `null`
+- `psalm.psalmClientScriptPath`: Optional (Advanced). If provided, this overrides the Psalm client script to use, e.g. `vendor/bin/psalm`, `$HOME/path/to/psalm`, `~/path/to/psalm`. (Modifying requires restart), default: `null`, default: `null`
 - `psalm.enableUseIniDefaults`: Enable this to use PHP-provided ini defaults for memory and error display. (Modifying requires restart), default: `false`
 - `psalm.enableDebugLog`: Enable this to print messages, default: `false`
 - `psalm.analyzedFileExtensions`: A list of file extensions to request Psalm to analyze. By default, this only includes 'php' (Modifying requires restart), default: `[{ "scheme": "file", "language": "php" }, { "scheme": "untitled", "language": "php" }]`

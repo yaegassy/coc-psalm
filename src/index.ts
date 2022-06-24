@@ -15,14 +15,12 @@ import {
   window,
   workspace,
 } from 'coc.nvim';
-
-import * as path from 'path';
-import { spawn, execFile, ChildProcess } from 'mz/child_process';
-import * as semver from 'semver';
 import * as fs from 'fs';
-
-import { registerCommands } from './commands';
+import { ChildProcess, execFile, spawn } from 'mz/child_process';
+import * as path from 'path';
+import * as semver from 'semver';
 import { PsalmCodeActionProvider } from './actions';
+import { registerCommands } from './commands';
 
 function isFile(filePath: string): boolean {
   try {
@@ -100,10 +98,33 @@ export async function activate(context: ExtensionContext): Promise<void> {
     '-dxdebug_profiler_enable=0',
   ];
 
-  const defaultPsalmClientScriptPath = path.join('vendor', 'vimeo', 'psalm', 'psalm');
-  const defaultPsalmServerScriptPath = path.join('vendor', 'vimeo', 'psalm', 'psalm-language-server');
-  let psalmClientScriptPath = conf.get<string>('psalmClientScriptPath') || defaultPsalmClientScriptPath;
-  let psalmServerScriptPath = conf.get<string>('psalmScriptPath') || defaultPsalmServerScriptPath;
+  // TODO: (plan) remove psalmClientScriptPath related
+  let psalmClientScriptPath: string;
+  const customClientScriptPath = conf.get<string>('psalmClientScriptPath');
+  if (customClientScriptPath) {
+    psalmClientScriptPath = customClientScriptPath;
+  } else {
+    psalmClientScriptPath = path.join(workspace.root, 'vendor', 'vimeo', 'psalm', 'psalm');
+  }
+
+  // server path
+  let psalmServerScriptPath: string;
+  const customServerScriptPath = conf.get<string>('psalmScriptPath');
+  const expandServerScriptPath = customServerScriptPath ? workspace.expand(customServerScriptPath) : undefined;
+  let resolveServerScriptPath: string | undefined;
+  if (expandServerScriptPath) {
+    if (!expandServerScriptPath.startsWith('/')) {
+      resolveServerScriptPath = path.join(workspace.root, expandServerScriptPath);
+    } else {
+      resolveServerScriptPath = expandServerScriptPath;
+    }
+  }
+  if (resolveServerScriptPath && fs.existsSync(resolveServerScriptPath)) {
+    psalmServerScriptPath = resolveServerScriptPath;
+  } else {
+    psalmServerScriptPath = path.join(workspace.root, 'vendor', 'vimeo', 'psalm', 'psalm-language-server');
+  }
+
   const unusedVariableDetection = conf.get<boolean>('unusedVariableDetection') || false;
   const enableUseIniDefaults = conf.get<boolean>('enableUseIniDefaults') || false;
   const enableDebugLog = true; // conf.get<boolean>('enableDebugLog') || false;
@@ -116,31 +137,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     { scheme: 'untitled', language: 'php' },
   ];
   const psalmConfigPaths: string[] = conf.get<string[]>('configPaths') || ['psalm.xml', 'psalm.xml.dist'];
-
-  // Check if the psalmServerScriptPath setting was provided.
-  if (!fs.existsSync(psalmServerScriptPath)) {
-    window.showMessage(
-      `The setting psalm.psalmScriptPath must be provided (e.g. vendor/bin/psalm-language-server)`,
-      'error'
-    );
-    return;
-  }
-
-  // Check if the psalmClientScriptPath setting was provided.
-  if (!psalmClientScriptPath) {
-    window.showMessage(`The setting psalm.psalmClientScriptPath must be provided (e.g. vendor/bin/psalm)`, 'error');
-    return;
-  }
-
-  const workspacePath = workspace.root;
-
-  if (!isFile(psalmServerScriptPath)) {
-    psalmServerScriptPath = path.join(workspacePath, psalmServerScriptPath);
-  }
-
-  if (!isFile(psalmClientScriptPath)) {
-    psalmClientScriptPath = path.join(workspacePath, psalmClientScriptPath);
-  }
 
   // Check if psalm is installed and supports the language server protocol.
   const isValidPsalmVersion: boolean = await checkPsalmHasLanguageServer(psalmServerScriptPath);
@@ -199,13 +195,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // **NOTE**
   // In coc-psalm, activationEvents are intentionally set to "workspaceContains:psalm.xml" or "workspaceContains:psalm.xml.dist".
   // In order for this to work, you need to change activationEvents to "onLanguage:php".
-  const psalmConfigPath = filterPath(psalmConfigPaths, workspacePath);
+  const psalmConfigPath = filterPath(psalmConfigPaths, workspace.root);
   if (psalmConfigPath === null) {
     window
       .showWarningMessage('No psalm.xml config found in project root. Want to configure one?', 'Yes', 'No')
       .then(async (result) => {
         if (result == 'Yes') {
-          await execFile(phpExecutablePath, [psalmClientScriptPath, '--init'], { cwd: workspacePath });
+          await execFile(phpExecutablePath, [psalmClientScriptPath, '--init'], { cwd: workspace.root });
           window
             .showInformationMessage(
               'Psalm configuration has been initialized. To make the setting effective, run :CocRestart.',
@@ -272,9 +268,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
           args.unshift('--use-ini-defaults');
         }
 
-        args.unshift('-r', workspacePath);
+        args.unshift('-r', workspace.root);
 
-        args.unshift('-c', path.join(workspacePath, psalmConfigPath));
+        args.unshift('-c', path.join(workspace.root, psalmConfigPath));
 
         args.unshift(...psalmScriptArgs);
 
@@ -355,7 +351,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const lc = new LanguageClient(
     'psalm',
     'Psalm Language Server',
-    serverOptionsCallbackForDirectory(workspacePath),
+    serverOptionsCallbackForDirectory(workspace.root),
     clientOptions
   );
 
