@@ -86,7 +86,7 @@
             "null"
           ],
           "default": null,
-          "description": "Optional (Advanced). If provided, this overrides the Psalm script to use, e.g. vendor/bin/psalm-language-server. (Modifying requires restart)"
+          "description": "Optional (Advanced). If provided, this overrides the Psalm server script to use, e.g. `vendor/bin/psalm-language-server`, `$HOME/path/to/psalm-language-server`, `~/path/to/psalm-language-server` (Modifying requires restart)"
         },
         "psalm.psalmScriptExtraArgs": {
           "type": "array",
