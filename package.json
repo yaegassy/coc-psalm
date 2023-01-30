@@ -32,8 +32,7 @@
     "semi": true
   },
   "activationEvents": [
-    "workspaceContains:**/psalm.xml",
-    "workspaceContains:**/psalm.xml.dist"
+    "workspaceContains:**/?(psalm.xml|psalm.xml.dist)"
   ],
   "contributes": {
     "configuration": {
