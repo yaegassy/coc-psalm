@@ -44,9 +44,9 @@ function filterPath(paths: string[], workspacePath: string): string | null {
 async function checkPsalmHasLanguageServer(psalmScriptPath: string): Promise<boolean> {
   const exists: boolean = isFile(psalmScriptPath);
   if (!exists) {
-    window.showErrorMessage(
-      'The setting psalm.psalmScriptPath refers to a path that does not exist. path: ' + psalmScriptPath
-    );
+    // window.showErrorMessage(
+    //   'The setting psalm.psalmScriptPath refers to a path that does not exist. path: ' + psalmScriptPath
+    // );
     return false;
   }
   return true;
