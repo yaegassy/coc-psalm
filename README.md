@@ -20,7 +20,7 @@ Install `psalm` in your project.
 composer require --dev vimeo/psalm
 ```
 
-**Requires**: `psalm.xml` or `psalm.xml.dist` file is required in the project root as a condition for starting "coc-psalm".
+**Required:** The project must contain a `psalm.xml` or `psalm.xml.dist` file as a condition for starting "coc-psalm".
 
 ```sh
 ./vendor/bin/psalm --init
