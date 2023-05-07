@@ -1,23 +1,28 @@
 import {
-  TextDocument,
   CodeAction,
   CodeActionContext,
   CodeActionProvider,
-  languages,
+  Diagnostic,
   Position,
   Range,
+  TextDocument,
   TextEdit,
   workspace,
 } from 'coc.nvim';
 
-export class PsalmCodeActionProvider implements CodeActionProvider {
-  private readonly source = 'psalm';
-  private diagnosticCollection = languages.createDiagnosticCollection(this.source);
+type AdditionalDiagnostic = {
+  codeDescription?: {
+    href?: string;
+  };
+};
 
+type PsalmDiagnostic = Diagnostic & AdditionalDiagnostic;
+
+export class PsalmCodeActionProvider implements CodeActionProvider {
   public async provideCodeActions(document: TextDocument, range: Range, context: CodeActionContext) {
     const doc = workspace.getDocument(document.uri);
     const wholeRange = Range.create(0, 0, doc.lineCount, 0);
-    let whole = false;
+    let _whole = false;
     if (
       range.start.line === wholeRange.start.line &&
       range.start.character === wholeRange.start.character &&
@@ -25,7 +30,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
       range.end.character === wholeRange.end.character
     ) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      whole = true;
+      _whole = true;
     }
     const codeActions: CodeAction[] = [];
 
@@ -33,7 +38,7 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
     if (this.lineRange(range) && context.diagnostics.length > 0) {
       let existsPsalmDiagnostics = false;
       context.diagnostics.forEach((d) => {
-        if (d.source === 'Psalm') {
+        if (d.source === 'psalm' || d.source === 'Psalm') {
           existsPsalmDiagnostics = true;
         }
       });
@@ -65,50 +70,26 @@ export class PsalmCodeActionProvider implements CodeActionProvider {
       }
     }
 
-    /** Add @psalm suppress for the entire file */
-    /** MEMO: Since file-level suppression is not supported in the current psalm, comment out this feature */
-    // if (whole && context.diagnostics.length > 0) {
-    //   const suppressFileNewText = `/** @psalm-suppress all */\n`;
-    //   let suppressFileLine = 0;
-    //   let isSuppressFilleLine = false;
-    //
-    //   for (let [i, v] of (await doc.buffer.lines).entries()) {
-    //     v = v.trim();
-    //     if (v.endsWith('declare(strict_types=1);')) {
-    //       suppressFileLine = i + 1;
-    //       isSuppressFilleLine = true;
-    //     } else if (v.endsWith('<?php')) {
-    //       suppressFileLine = i + 1;
-    //       isSuppressFilleLine = true;
-    //     }
-    //   }
-    //
-    //   if (isSuppressFilleLine) {
-    //     const edit = TextEdit.insert(Position.create(suppressFileLine, 0), suppressFileNewText);
-    //     codeActions.push({
-    //       title: 'Add @psalm suppress for the entire file',
-    //       edit: {
-    //         changes: {
-    //           [doc.uri]: [edit],
-    //         },
-    //       },
-    //     });
-    //   }
-    // }
-
     /** Show issue for ${url} */
     for (const diagnostic of context.diagnostics) {
       if (diagnostic.code) {
         let existsPsalmDiagnostics = false;
         context.diagnostics.forEach((d) => {
-          if (d.source === 'Psalm') {
+          if (d.source === 'psalm' || d.source === 'Psalm') {
             existsPsalmDiagnostics = true;
           }
         });
 
-        /** type guard */
         if (typeof diagnostic.code === 'string' && existsPsalmDiagnostics) {
-          const url = JSON.parse(diagnostic.code).issue;
+          const psalmDiag = diagnostic as PsalmDiagnostic;
+
+          let url = '';
+          if (psalmDiag.codeDescription?.href) {
+            // v5.9.0 later
+            url = psalmDiag.codeDescription.href;
+          } else {
+            url = JSON.parse(diagnostic.code).issue;
+          }
 
           const title = `Show issue for ${url}`;
           const command = {
