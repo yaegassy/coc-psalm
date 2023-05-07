@@ -62,8 +62,8 @@ In the line with diagnostic message, enter the mapped key (e.g. `ga`) and you wi
 
 **Actions**:
 
-- `Add @psalm suppress for this line`
 - `Show issue for https://psalm.dev/xxx`: Open the issue url in your browser
+- `Suppress all for this line`
 
 ## "psalm.xml" or "psalm.xml.dist" completion and linting and more...
 
